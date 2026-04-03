@@ -1250,10 +1250,11 @@ ak-loading-overlay {
 }
 
 .pf-c-page>.pf-c-page__header {
-    background: rgba(0, 0, 0, 0.4) !important;
-    backdrop-filter: blur(18px) !important;
-    -webkit-backdrop-filter: blur(18px) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(0, 0, 0, 0.15) !important;
+    backdrop-filter: blur(30px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(140%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* IOS/Mobile Fix: .pf-c-page needs relative positioning, fixed bg moved to ::before */
@@ -2038,6 +2039,431 @@ text-transform: capitalize !important;
     margin: 10px 0 15px 0;
     letter-spacing: 0.4px;
     opacity: 0.8;
+}
+
+/* ========================================= */
+/* POST-AUTH USER INTERFACE GLASSMORPHISM    */
+/* Targets the library/dashboard page ONLY   */
+/* Does NOT affect the Admin Interface       */
+/* ========================================= */
+
+/* --- KILL THE DEFAULT SLANT BACKGROUND --- */
+/* Authentik 2026 renders a fixed background-wrapper + background-default-slant */
+/* These create the ugly dark gradient. We hide them and let our wallpaper show. */
+
+/* From inside the shadow DOM (adopted stylesheet) */
+[part="background-wrapper"] {
+    background-color: transparent !important;
+    background-image: var(--ak-flow-background) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+[part="background-default-slant"] {
+    display: none !important;
+}
+
+/* Override the slant color variables */
+:host([theme="dark"]) .pf-c-page,
+:host(ak-interface-user) .pf-c-page {
+    --ak-user-interface--slant-m-light: transparent !important;
+    --ak-user-interface--slant-m-dark: transparent !important;
+}
+
+/* From the light DOM via ::part() */
+ak-interface-user::part(background-wrapper) {
+    background-color: transparent !important;
+    background-image: var(--ak-flow-background) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+ak-interface-user::part(background-default-slant) {
+    display: none !important;
+}
+
+/* --- Header Bar: Glassmorphic --- */
+/* Frosted glass navbar — more transparent, blends with wallpaper */
+:host(ak-interface-user) .pf-c-page__header,
+:host(ak-interface-user) .pf-c-page > .pf-c-page__header,
+.pf-c-page__header {
+    background: rgba(255, 255, 255, 0.06) !important;
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: blur(40px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(150%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15) !important;
+    --pf-c-page__header--BackgroundColor: transparent !important;
+}
+
+/* Also target via ::part from light DOM */
+ak-interface-user::part(page__header) {
+    background: rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: blur(40px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(150%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Header brand link text */
+:host(ak-interface-user) .pf-c-page__header-brand-link {
+    color: white !important;
+}
+
+/* --- Main Content Section: Transparent --- */
+/* Remove the opaque gray background from the content area */
+:host(ak-interface-user) .pf-c-page__main-section,
+:host(ak-interface-user) .pf-c-page__main-section.pf-m-light {
+    background: transparent !important;
+    background-color: transparent !important;
+    --pf-c-page__main-section--BackgroundColor: transparent !important;
+}
+
+/* Page title area ("My applications") — seamless, no floating bar look */
+:host(ak-interface-user) .pf-c-page__title,
+:host(ak-interface-user) .pf-c-page__header.pf-c-content,
+:host(ak-library-impl) .pf-c-page__header.pf-c-content {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    font-weight: 600 !important;
+}
+
+/* Content sections used as sub-headers */
+:host(ak-interface-user) .pf-c-page__main-section.pf-m-light,
+:host(ak-library-impl) .pf-c-page__main-section.pf-m-light,
+:host(ak-interface-user) .pf-c-page__main-section,
+:host(ak-library-impl) .pf-c-page__main-section {
+    background: transparent !important;
+    background-color: transparent !important;
+    --pf-c-page__main-section--BackgroundColor: transparent !important;
+    --pf-c-page__main-section--m-light--BackgroundColor: transparent !important;
+    padding-top: 16px !important;
+    padding-bottom: 8px !important;
+}
+
+/* "My applications" title + search row — glassmorphic rounded card */
+:host(ak-library-impl) .pf-c-page__header.pf-c-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 14px 24px !important;
+    margin: 16px 20px 0 20px !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    backdrop-filter: blur(30px) saturate(130%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(130%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Search bar inside the glassmorphic row */
+:host(ak-library-impl) .pf-c-page__header.pf-c-content .pf-c-form-control,
+:host(ak-library-impl) .pf-c-page__header.pf-c-content input[type="text"],
+:host(ak-library-impl) .pf-c-page__header.pf-c-content input[type="search"] {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+:host(ak-library-impl) .pf-c-page__header.pf-c-content input:focus {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    outline: none !important;
+}
+
+/* Drawer containers - ensure transparent */
+:host(ak-interface-user) .pf-c-drawer,
+:host(ak-interface-user) .pf-c-drawer__body,
+:host(ak-interface-user) .pf-c-drawer__content,
+:host(ak-interface-user) .pf-c-drawer__main,
+:host(ak-interface-user) .pf-c-page__drawer {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* --- Empty State (No Applications): Glassmorphic Card --- */
+:host(ak-library-application-empty-list) .pf-c-empty-state,
+:host(ak-library-impl) .pf-c-empty-state {
+    background: rgba(255, 255, 255, 0.04) !important;
+    backdrop-filter: blur(30px) saturate(130%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(130%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 28px !important;
+    padding: 50px 40px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+    max-width: 550px !important;
+    margin: 20px auto !important;
+}
+
+:host(ak-library-application-empty-list) .pf-c-empty-state__icon,
+:host(ak-library-impl) .pf-c-empty-state__icon {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+:host(ak-library-application-empty-list) .pf-c-empty-state__body,
+:host(ak-library-impl) .pf-c-empty-state__body {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+:host(ak-library-application-empty-list) .pf-c-title,
+:host(ak-library-impl) .pf-c-empty-state .pf-c-title {
+    color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* "Create a new application" button - glassmorphic */
+:host(ak-library-application-empty-list) .pf-c-button.pf-m-primary,
+:host(ak-library-impl) .pf-c-empty-state .pf-c-button.pf-m-primary,
+:host(ak-library-impl) .pf-c-button.pf-m-primary {
+    background: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: white !important;
+    border-radius: 14px !important;
+    font-weight: 600 !important;
+    padding: 12px 28px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+:host(ak-library-application-empty-list) .pf-c-button.pf-m-primary:hover,
+:host(ak-library-impl) .pf-c-empty-state .pf-c-button.pf-m-primary:hover,
+:host(ak-library-impl) .pf-c-button.pf-m-primary:hover {
+    background: rgba(255, 255, 255, 0.22) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+:host(ak-library-application-empty-list) .pf-c-button.pf-m-primary::after,
+:host(ak-library-impl) .pf-c-empty-state .pf-c-button.pf-m-primary::after,
+:host(ak-library-impl) .pf-c-button.pf-m-primary::after,
+:host(ak-library-application-empty-list) .pf-c-button::after,
+:host(ak-library-impl) .pf-c-button::after {
+    display: none !important;
+    content: none !important;
+    border: none !important;
+}
+
+/* "Refer to documentation" link */
+:host(ak-library-application-empty-list) .pf-c-empty-state a,
+:host(ak-library-impl) .pf-c-empty-state a {
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+:host(ak-library-application-empty-list) .pf-c-empty-state a:hover,
+:host(ak-library-impl) .pf-c-empty-state a:hover {
+    color: white !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* --- Library Search Bar: Glassmorphic --- */
+:host(ak-library-impl) .pf-c-page__main-section .pf-c-form-control,
+:host(ak-library-impl) .pf-c-page__main-section input[type="text"],
+:host(ak-library-impl) .pf-c-page__main-section input[type="search"] {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 8px 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+:host(ak-library-impl) .pf-c-page__main-section .pf-c-form-control:focus,
+:host(ak-library-impl) .pf-c-page__main-section input:focus {
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* --- Notification & Header Icon Buttons --- */
+:host(ak-interface-user) .pf-c-button.pf-m-plain {
+    color: rgba(255, 255, 255, 0.7) !important;
+    transition: all 0.2s ease !important;
+}
+
+:host(ak-interface-user) .pf-c-button.pf-m-plain:hover {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+}
+
+/* --- Notifications Drawer Panel: Glassmorphic --- */
+/* The drawer panel is inside ak-interface-user's shadow DOM.
+   The notification CONTENT is rendered by a lazily-loaded child component
+   with its own shadow DOM, so we target broadly. */
+
+/* Outer drawer panel container (inside ak-interface-user shadow DOM) */
+:host(ak-interface-user) .pf-c-drawer__panel,
+.pf-c-drawer__panel {
+    background: rgba(0, 0, 0, 0.35) !important;
+    background-color: rgba(0, 0, 0, 0.35) !important;
+    backdrop-filter: blur(40px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(150%) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: -4px 0 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Notification content — targets ANY component that renders inside the panel.
+   These rules work when adopted into notification/API drawer shadow DOMs. */
+.pf-c-notification-drawer {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+.pf-c-notification-drawer__header {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: white !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.pf-c-notification-drawer__body {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Generic drawer body/head/panel-body used by Authentik's drawer */
+.pf-c-drawer__body,
+.pf-c-drawer__head,
+.pf-c-drawer__panel-body {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Force all page sections inside drawer to transparent */
+.pf-c-drawer__panel .pf-c-page__main-section,
+.pf-c-drawer__panel .pf-c-page__main-section.pf-m-light {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Empty state inside notification drawer */
+.pf-c-notification-drawer .pf-c-empty-state,
+.pf-c-drawer__panel .pf-c-empty-state {
+    background: transparent !important;
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+.pf-c-notification-drawer .pf-c-empty-state__icon,
+.pf-c-drawer__panel .pf-c-empty-state__icon {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.pf-c-notification-drawer .pf-c-empty-state__body,
+.pf-c-notification-drawer .pf-c-empty-state .pf-c-title,
+.pf-c-notification-drawer .pf-c-title,
+.pf-c-drawer__panel .pf-c-empty-state__body,
+.pf-c-drawer__panel .pf-c-empty-state .pf-c-title,
+.pf-c-drawer__panel .pf-c-title {
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Action buttons inside drawer (trash, close, clear all) */
+.pf-c-notification-drawer .pf-c-button.pf-m-plain,
+.pf-c-drawer__panel .pf-c-button.pf-m-plain {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.pf-c-notification-drawer .pf-c-button.pf-m-plain:hover,
+.pf-c-drawer__panel .pf-c-button.pf-m-plain:hover {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+}
+
+/* Notification items */
+.pf-c-notification-drawer__list-item,
+.pf-c-drawer__panel .pf-c-data-list__item {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    color: white !important;
+}
+
+.pf-c-notification-drawer__list-item:hover,
+.pf-c-drawer__panel .pf-c-data-list__item:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Nuclear: override any dark background on the host element
+   of whatever component renders notification content */
+:host .pf-c-page__main-section {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+:host .pf-c-page__main-section.pf-m-light {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Card backgrounds inside drawers */
+.pf-c-drawer__panel .pf-c-card,
+.pf-c-notification-drawer .pf-c-card {
+    background: transparent !important;
+    --pf-c-card--BackgroundColor: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Text colors inside drawer */
+.pf-c-drawer__panel .pf-c-content,
+.pf-c-drawer__panel p,
+.pf-c-drawer__panel span,
+.pf-c-drawer__panel h1,
+.pf-c-drawer__panel h2,
+.pf-c-drawer__panel h3,
+.pf-c-drawer__panel h4,
+.pf-c-notification-drawer .pf-c-content,
+.pf-c-notification-drawer p,
+.pf-c-notification-drawer span,
+.pf-c-notification-drawer h1,
+.pf-c-notification-drawer h2,
+.pf-c-notification-drawer h3,
+.pf-c-notification-drawer h4 {
+    color: white !important;
+}
+
+/* --- SAFETY: Exclude Admin Interface --- */
+:host(ak-interface-admin) .pf-c-page__header {
+    background: var(--pf-c-page__header--BackgroundColor, #151515) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+:host(ak-interface-admin) .pf-c-page__main-section {
+    background: var(--pf-c-page__main-section--BackgroundColor) !important;
+}
+
+:host(ak-interface-admin) [part="background-wrapper"] {
+    background-image: none !important;
+}
+
+:host(ak-interface-admin) [part="background-default-slant"] {
+    display: block !important;
 }
 
 /* ===== RESPONSIVE MOBILE ===== */
